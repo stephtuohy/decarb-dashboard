@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: theme(colors.primary),
+  --primary-dark: theme('colors.blue-dark');
+  --primary-opacity: theme('colors.blue-dark-opacity');
+  --grey-stroke: theme('colors.grey-stroke');
+  --grey-dark: theme('colors.grey-dark');
+  --grey-opacity: theme('colors.grey-opacity');
+  --error: theme('colors.error');
+  --warning: theme('colors.warning');
+  --success: theme('colors.success');
+  --shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100%;
+  min-height: 100vh;
+	width: 100%;
+	background: 
+    
+    radial-gradient(at 97% 8%, rgb(255, 255, 255) 0px, 
+    transparent 50%) repeat scroll 0% 0%, 
+    
+    radial-gradient(at 90% 100%, #1b3747 0px, 
+    transparent 40%) repeat scroll 0% 0%,
+        
+    radial-gradient(at 96% 10%, #ffc600 0px, 
+    transparent 50%) repeat scroll 0% 0%,    
+                
+    radial-gradient(at 42% 20%, #76ca6f 0px, 
+    transparent 50%) repeat scroll 0% 0%,
+                
+    radial-gradient(at 4% 49%, #76ca6f 0px, 
+    transparent 50%) repeat scroll 0% 0%, rgba(255, 255, 255, 0) 
+    
+}
+
+
+
+button {
+  @apply text-white w-full font-bold tracking-wide p-4 rounded-lg bg-primary flex justify-center items-center text-sm tracking-wide hover:bg-blue-dark;
+}
+
+
+  label {
+  @apply text-sm text-grey-dark font-light tracking-wide;
+}
+
+input,
+textarea,
+select {  
+  @apply mt-1 mb-5 tracking-wide text-sm w-full rounded-md border border-grey-stroke px-4 py-3
+  focus:border-primary focus:outline-none;
+}
+
+
+input[type='checkbox'] {
+  @apply cursor-pointer;
+}
+
+input[type='radio'] {
+  cursor: pointer;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+
+
+
+
+/* .input-group {
+  position: relative;
+
+  span[fb-for] {
+    color: var(--error);
+    @apply text-xs font-light absolute left-0 -bottom-px whitespace-nowrap;
+  }
+}
+
+.input-error {
+  outline: 2px solid var(--error);; 
+}*/
+
+
+
+/* Loader */
+  #loader {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.68);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  color: white;
+}
+
+#loader svg > path {
+  fill: white;
+}
+
+#loaderMsg {
+  position: absolute;
+  margin-top: 6rem;
+}
+
+
+

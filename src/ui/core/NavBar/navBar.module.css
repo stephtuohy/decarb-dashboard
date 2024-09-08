@@ -1,0 +1,42 @@
+.navBar {
+  @apply relative bg-white/50 py-3 text-blue-dark;
+}
+.navBarContainer {
+  @apply container flex justify-between items-center;
+}
+
+.navBarMobile {
+  @apply absolute md:hidden bg-white w-screen mt-3 text-center;
+}
+
+.navLink {
+  @apply mx-1 text-grey-dark text-sm hover:text-primary;
+}
+
+.navLinkMobile {
+  @apply block px-3 py-2 rounded-md text-base font-normal text-grey;
+}
+
+.active {
+  @apply text-blue-dark font-bold;
+}
+
+.hamburger {
+  @apply inline-flex items-center justify-center p-1 rounded-md bg-primary/50 hover:bg-primary;
+}
+
+.profile {
+  @apply flex text-sm border-none rounded-full;
+}
+
+.profileImg {
+  @apply h-8 w-8  hover:cursor-pointer;
+}
+
+.dropdownContainer {
+  @apply absolute right-0 mt-2 w-fit bg-white rounded-md shadow-lg z-20 flex flex-col text-sm;
+}
+
+.dropdownLink {
+  @apply w-full px-3 py-2 rounded-md hover:bg-primary/20;
+}
