@@ -17,3 +17,15 @@
 .pinInpt {
   @apply mx-1 w-1/5 text-center  text-sm px-1 sm:text-base sm:px-4 sm:mx-2;
 }
+
+.passEye {
+  @apply absolute right-3 top-9 text-grey-stroke cursor-pointer;
+}
+
+.inputErr {
+  @apply text-error text-xs;
+}
+
+.inputErrCenter {
+  @apply text-error text-xs text-center;
+}

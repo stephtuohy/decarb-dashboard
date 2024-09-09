@@ -14,7 +14,7 @@
 }
 
 .navLinkMobile {
-  @apply block px-3 py-2 rounded-md text-base font-normal text-grey;
+  @apply block px-3 py-2 rounded-md text-base font-normal text-grey cursor-pointer hover:text-primary;
 }
 
 .active {

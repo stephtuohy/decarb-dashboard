@@ -1,4 +1,4 @@
-import NavBar from "@/ui/core/NavBar/NavBar.jsx";
+import NavBar from "@/ui/NavBar/NavBar.jsx";
 
 
 const Layout = ({ children }) => {

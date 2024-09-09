@@ -1,12 +1,16 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
-import styles from './reg.module.css';
+import styles from "./reg.module.css";
+import { useRouter } from "next/navigation";
+import Spinner from "@/ui/loaders/Spinner";
 
-export default function RegistrationForm({ router }) {
+export default function RegistrationForm() {
+  const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -17,13 +21,14 @@ export default function RegistrationForm({ router }) {
   });
 
   const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
+    const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return reg.test(String(email).toLowerCase());
   };
 
   const validatePassword = (password) => {
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return re.test(password);
+    const reg =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return reg.test(password);
   };
 
   const validateForm = () => {
@@ -42,13 +47,38 @@ export default function RegistrationForm({ router }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
-      // Perform registration logic
-      // If successful:
-      router.push("/verification"); // Redirect to the verification page
+      setLoading(true); 
+
+      try {
+        const response = await fetch("/api/registration", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          sessionStorage.setItem('userName', formData.firstName);
+          router.push("/verification");
+        } else {
+          const errorData = await response.json();
+          console.error("Registration failed:", errorData);
+          throw new Error(errorData.message || "Registration failed. Please try again.");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          form: error.message || "An unexpected error occurred. Please try again.",
+        }));
+      } finally {
+        setLoading(false); 
+      }
     }
   };
 
@@ -57,6 +87,23 @@ export default function RegistrationForm({ router }) {
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+      // Clear errors for iinputs
+    if (e.target.name === "firstName" && errors.firstName) {
+      setErrors((prevErrors) => ({ ...prevErrors, firstName: undefined }));
+    }
+    if (e.target.name === "lastName" && errors.lastName) {
+      setErrors((prevErrors) => ({ ...prevErrors, lastName: undefined }));
+    }
+    if (e.target.name === "email" && errors.email) {
+      setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+    }
+    if (e.target.name === "password" && errors.password) {
+      setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+    }
+    if (e.target.name === "confirmPassword" && errors.confirmPassword) {
+      setErrors((prevErrors) => ({ ...prevErrors, confirmPassword: undefined }));
+    }
   };
 
   return (
@@ -68,7 +115,7 @@ export default function RegistrationForm({ router }) {
 
       <form onSubmit={handleSubmit}>
         <div className="flex space-x-4">
-          <div className="w-1/2">
+          <div className="w-1/2 inputDiv">
             <label htmlFor="firstName">First Name</label>
             <input
               type="text"
@@ -79,10 +126,12 @@ export default function RegistrationForm({ router }) {
               placeholder="First Name"
               className="border p-2 w-full"
             />
-            {errors.firstName && <p className="text-red-500">{errors.firstName}</p>}
+            {errors.firstName && (
+              <p className={styles.inputErr}>{errors.firstName}</p>
+            )}
           </div>
 
-          <div className="w-1/2">
+          <div className="w-1/2 inputDiv">
             <label htmlFor="lastName">Last Name</label>
             <input
               type="text"
@@ -93,11 +142,13 @@ export default function RegistrationForm({ router }) {
               placeholder="Last Name"
               className="border p-2 w-full"
             />
-            {errors.lastName && <p className="text-red-500">{errors.lastName}</p>}
+            {errors.lastName && (
+              <p className={styles.inputErr}>{errors.lastName}</p>
+            )}
           </div>
         </div>
 
-        <div>
+        <div className="inputDiv">
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -108,10 +159,10 @@ export default function RegistrationForm({ router }) {
             placeholder="Email"
             className="border p-2 w-full"
           />
-          {errors.email && <p className="text-red-500">{errors.email}</p>}
+          {errors.email && <p className={styles.inputErr}>{errors.email}</p>}
         </div>
 
-        <div>
+        <div className="inputDiv">
           <label htmlFor="entityType">Entity Type</label>
           <select
             id="entityType"
@@ -126,7 +177,7 @@ export default function RegistrationForm({ router }) {
           </select>
         </div>
 
-        <div>
+        <div className="inputDiv">
           <label htmlFor="password">Set Password</label>
           <input
             type={passwordVisible ? "text" : "password"}
@@ -139,14 +190,18 @@ export default function RegistrationForm({ router }) {
           />
           <div
             onClick={() => setPasswordVisible(!passwordVisible)}
-            className="absolute right-3 top-2 text-gray-500 cursor-pointer"
+            className={styles.passEye}
           >
-            {passwordVisible ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            {passwordVisible ? (
+              <EyeSlashIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
           </div>
-          {errors.password && <p className="text-red-500">{errors.password}</p>}
+          {errors.password && <p className={styles.inputErr}>{errors.password}</p>}
         </div>
 
-        <div className="mb-6 relative">
+        <div className="inputDiv ">
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
             type={confirmPasswordVisible ? "text" : "password"}
@@ -159,16 +214,24 @@ export default function RegistrationForm({ router }) {
           />
           <div
             onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-            className="absolute right-3 top-2 text-gray-500 cursor-pointer"
+             className={styles.passEye}
           >
-            {confirmPasswordVisible ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            {confirmPasswordVisible ? (
+              <EyeSlashIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
           </div>
-          {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword}</p>}
+          {errors.confirmPassword && (
+            <p className={styles.inputErr}>{errors.confirmPassword}</p>
+          )}
         </div>
 
-        <button type="submit">
-          Register
+        <button type="submit" disabled={loading}>
+          {loading ? <Spinner /> : 'Register'}
         </button>
+        {errors.form && <p className={styles.inputErrCenter}>{errors.form}</p>}
+
       </form>
     </div>
   );

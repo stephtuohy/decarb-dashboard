@@ -51,6 +51,10 @@ button {
   @apply text-white w-full font-bold tracking-wide p-4 rounded-lg bg-primary flex justify-center items-center text-sm tracking-wide hover:bg-blue-dark;
 }
 
+button:disabled { 
+  @apply bg-grey-stroke
+}
+
 
   label {
   @apply text-sm text-grey-dark font-light tracking-wide;
@@ -59,8 +63,12 @@ button {
 input,
 textarea,
 select {  
-  @apply mt-1 mb-5 tracking-wide text-sm w-full rounded-md border border-grey-stroke px-4 py-3
+  @apply mt-1 mb-2 tracking-wide text-sm w-full rounded-md border border-grey-stroke px-4 py-3
   focus:border-primary focus:outline-none;
+}
+
+.inputDiv{
+  @apply mb-3 relative
 }
 
 

@@ -1,6 +1,7 @@
 "use client"
 import { Bar, Scatter } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, Title, Tooltip, Legend } from "chart.js";
+import { useEffect, useState } from "react";
 
 // Register chart types
 ChartJS.register(
@@ -16,6 +17,14 @@ ChartJS.register(
 
 
 const Dashboard = () => {
+
+  const [userName, setUserName] = useState(null);
+  useEffect(() => {
+    const storedUserName = sessionStorage.getItem('userName');
+    setUserName(storedUserName);
+  }, []);
+
+
   // Fake data for Bar Chart
   const barData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
@@ -78,8 +87,8 @@ const Dashboard = () => {
 
   return (
     <div className="container">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <h1 className="text-2xl font-bold mb-4">Welcome, {userName}.</h1>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Bar Chart Card */}
         <div className="bg-white shadow-md rounded-lg p-4">
           <h2 className="text-xl font-semibold mb-4">Bar Chart</h2>
